@@ -10,6 +10,6 @@ public class Main {
 
         customer.addRental(gradleRental);
 
-        System.out.print("Customer '" + customer.getName() + "'\n\n" + customer.statement());
+        System.out.print(customer.statement());
     }
 }
