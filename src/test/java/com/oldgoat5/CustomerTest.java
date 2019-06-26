@@ -67,4 +67,9 @@ public class CustomerTest {
                 "You earned 2 frequent renter points", customer.statement());
     }
 
+    @Test
+    public void appendFooter_givenSomeValues_shouldConstructValidFooter() {
+
+    }
+
 }
