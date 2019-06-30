@@ -14,7 +14,7 @@ public class CustomerTest {
     public void statementTest() {
         Customer customer = new Customer("ME");
 
-        Movie gradle = new Movie("Deep Dive Into Gradle", 1);
+        Movie gradle = new Movie("Deep Dive Into Gradle", Movie.PriceCode.NEW_RELEASE);
         Rental gradleRental = new Rental(gradle, 3);
 
         customer.addRental(gradleRental);
@@ -26,7 +26,7 @@ public class CustomerTest {
     public void given_PriceCode_CHILDRENS_assert_amount_is_correct(){
         Customer customer = new Customer("ME");
 
-        Movie gradle = new Movie("Deep Dive Into Gradle", Movie.CHILDRENS);
+        Movie gradle = new Movie("Deep Dive Into Gradle", Movie.PriceCode.CHILDRENS);
         Rental gradleRental = new Rental(gradle, 3);
 
         customer.addRental(gradleRental);
@@ -41,7 +41,7 @@ public class CustomerTest {
     public void given_PriceCode_REGULAR_assert_amount_is_correct(){
         Customer customer = new Customer("ME");
 
-        Movie gradle = new Movie("Deep Dive Into Gradle", Movie.REGULAR);
+        Movie gradle = new Movie("Deep Dive Into Gradle", Movie.PriceCode.REGULAR);
         Rental gradleRental = new Rental(gradle, 3);
 
         customer.addRental(gradleRental);
@@ -56,7 +56,7 @@ public class CustomerTest {
     public void given_PriceCode_NEW_RELEASE_assert_amount_is_correct(){
         Customer customer = new Customer("ME");
 
-        Movie gradle = new Movie("Deep Dive Into Gradle", Movie.NEW_RELEASE);
+        Movie gradle = new Movie("Deep Dive Into Gradle", Movie.PriceCode.NEW_RELEASE);
         Rental gradleRental = new Rental(gradle, 3);
 
         customer.addRental(gradleRental);
@@ -69,7 +69,11 @@ public class CustomerTest {
 
     @Test
     public void appendFooter_givenSomeValues_shouldConstructValidFooter() {
+        Customer customer = new Customer("ME");
+        String test = customer.appendFooter(1d, 9, "IDK");
 
+
+        assertEquals("IDKAmount owed is 1.0\n" + "You earned 9 frequent renter points", test);
     }
 
 }

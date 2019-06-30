@@ -5,7 +5,6 @@ package com.oldgoat5;
  * @since 6/17/19
  *********************************************************************/
 public interface CostStrategy {
-
-    double getCost(Rental each);
+    double getCost(Rental rental);
 
 }

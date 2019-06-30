@@ -9,28 +9,22 @@ import java.util.Vector;
  * from martin fowler
  *********************************************************************/
 public class Customer {
-    public static final double BASE_CHILDRENS_PRICE = 1.5;
-    public static final double CHILDRENS_MULTIPLIER = 1.5;
-    private String _name;
-    private Vector _rentals = new Vector();
+    private String name;
+    private Vector<Rental> rentals = new Vector<>();
 
     public Customer(String name) {
-        _name = name;
+        this.name = name;
     }
 
     public void addRental(Rental arg) {
-        _rentals.addElement(arg);
-    }
-
-    public String getName() {
-        return _name;
+        rentals.addElement(arg);
     }
 
     public String statement() {
         double totalAmount = 0;
         int frequentRenterPoints = 0;
-        Enumeration rentals = _rentals.elements();
-        String result = "Rental Record for " + getName() + "\n";
+        Enumeration rentals = this.rentals.elements();
+        String result = "Rental Record for " + this.name + "\n";
 
         while (rentals.hasMoreElements()) {
             Rental each = (Rental) rentals.nextElement();
@@ -39,13 +33,12 @@ public class Customer {
             // add frequent renter points
             frequentRenterPoints++;
             // add bonus for a two day new release rental
-            if ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE)
-                    &&
-                    each.getDaysRented() > 1) frequentRenterPoints++;
+            if ((each.getMovie().priceCode == Movie.PriceCode.NEW_RELEASE) && each.getDaysRented() > 1) {
+                frequentRenterPoints++;
+            }
 
             //show figures for this rental
-            result += "\t" + each.getMovie().getTitle() + "\t" +
-                    String.valueOf(thisAmount) + "\n";
+            result += "\t" + each.getMovie().title + "\t" + thisAmount + "\n";
 
             totalAmount += thisAmount;
         }
@@ -56,30 +49,26 @@ public class Customer {
 
     @NotNull
     String appendFooter(double totalAmount, int frequentRenterPoints, String result) {
-        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-
-        result += "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter points";
+        result += "Amount owed is " + totalAmount + "\n";
+        result += "You earned " + frequentRenterPoints + " frequent renter points";
         return result;
     }
 
-    private double getThisAmount(Rental each) {
-        double thisAmount = 0.0;
-        switch (each.getMovie().getPriceCode()) {
-            case Movie.REGULAR: {
-                thisAmount = new RegularStrategy().getCost(each);
+    private double getThisAmount(Rental rental) {
+        switch (rental.getMovie().priceCode) {
+            case REGULAR: {
+                return new RegularStrategy().getCost(rental);
             }
-            case Movie.NEW_RELEASE: {
-                thisAmount += each.getDaysRented() * 3;
-                break;
+            case NEW_RELEASE: {
+                return new NewReleaseStrategy().getCost(rental);
             }
-            case Movie.CHILDRENS: {
-                thisAmount += BASE_CHILDRENS_PRICE;
-                if (each.getDaysRented() > 3)
-                    thisAmount += (each.getDaysRented() - 3) * CHILDRENS_MULTIPLIER;
-                break;
+            case CHILDRENS: {
+                return new ChildrensMovieStrategy().getCost(rental);
+
             }
+            default:
+                throw new IllegalArgumentException("Unrecognized Price Code");
         }
-        return thisAmount;
     }
 
 
