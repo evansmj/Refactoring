@@ -6,8 +6,8 @@ public class ChildrensMovieStrategy implements CostStrategy {
 
     @Override
     public double getCost(Rental rental) {
-        if (rental.getDaysRented() < 3) {
-            return BASE_CHILDRENS_PRICE + ((3 - rental.getDaysRented()) * CHILDRENS_MULTIPLIER);
+        if (rental.daysRented < 3) {
+            return BASE_CHILDRENS_PRICE + ((3 - rental.daysRented) * CHILDRENS_MULTIPLIER);
         } else {
             return BASE_CHILDRENS_PRICE;
         }

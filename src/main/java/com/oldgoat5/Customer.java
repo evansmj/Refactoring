@@ -28,7 +28,7 @@ public class Customer {
         StringBuilder lineItems = new StringBuilder();
         for (Rental rental : rentals) {
             lineItems.append("\t")
-                    .append(rental.getMovie().title)
+                    .append(rental.movie.title)
                     .append("\t")
                     .append(getCost(rental))
                     .append("\n");
@@ -67,7 +67,7 @@ public class Customer {
         int accumulate = 0;
         for (Rental rental : rentals) {
             accumulate++;
-            if ((rental.getMovie().priceCode == Movie.PriceCode.NEW_RELEASE) && rental.getDaysRented() > 1) {
+            if ((rental.movie.priceCode == Movie.PriceCode.NEW_RELEASE) && rental.daysRented > 1) {
                 accumulate++;
             }
         }
@@ -75,7 +75,7 @@ public class Customer {
     }
 
     private double getCost(Rental rental) {
-        switch (rental.getMovie().priceCode) {
+        switch (rental.movie.priceCode) {
             case REGULAR: {
                 return new RegularStrategy().getCost(rental);
             }

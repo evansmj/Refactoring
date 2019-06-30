@@ -9,8 +9,8 @@ public class RegularStrategy implements CostStrategy {
     @Override
     public double getCost(Rental rental) {
         double localThisAmount = 2;
-        if (rental.getDaysRented() > 2) {
-            localThisAmount += (rental.getDaysRented() - 2) * 1.5;
+        if (rental.daysRented > 2) {
+            localThisAmount += (rental.daysRented - 2) * 1.5;
         }
         return localThisAmount;
     }

@@ -6,6 +6,6 @@ public class NewReleaseStrategy implements CostStrategy {
 
     @Override
     public double getCost(Rental each) {
-        return each.getDaysRented() * COST;
+        return each.daysRented * COST;
     }
 }
