@@ -2,59 +2,79 @@ package com.oldgoat5;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /*********************************************************************
  * from martin fowler
  *********************************************************************/
 public class Customer {
     private String name;
-    private Vector<Rental> rentals = new Vector<>();
+    private List<Rental> rentals = new ArrayList<>();
 
     public Customer(String name) {
         this.name = name;
     }
 
     public void addRental(Rental arg) {
-        rentals.addElement(arg);
+        rentals.add(arg);
     }
 
     public String statement() {
-        double totalAmount = 0;
-        int frequentRenterPoints = 0;
-        Enumeration rentals = this.rentals.elements();
-        String result = "Rental Record for " + this.name + "\n";
+        return createHeader().append(appendLineItems()).append(appendFooter(getTotalAmount(), getFrequentRenterPoints())).toString();
+    }
 
-        while (rentals.hasMoreElements()) {
-            Rental each = (Rental) rentals.nextElement();
-            //determine amounts for each line
-            double thisAmount = getThisAmount(each);
-            // add frequent renter points
-            frequentRenterPoints++;
-            // add bonus for a two day new release rental
-            if ((each.getMovie().priceCode == Movie.PriceCode.NEW_RELEASE) && each.getDaysRented() > 1) {
-                frequentRenterPoints++;
-            }
-
-            //show figures for this rental
-            result += "\t" + each.getMovie().title + "\t" + thisAmount + "\n";
-
-            totalAmount += thisAmount;
+    StringBuilder appendLineItems(){
+        StringBuilder lineItems = new StringBuilder();
+        for (Rental rental : rentals) {
+            lineItems.append("\t")
+                    .append(rental.getMovie().title)
+                    .append("\t")
+                    .append(getCost(rental))
+                    .append("\n");
         }
+        return lineItems;
+    }
 
-        result = appendFooter(totalAmount, frequentRenterPoints, result);
-        return result;
+
+
+    StringBuilder createHeader(){
+        StringBuilder header = new StringBuilder();
+        header.append("Rental Record for ")
+                .append(this.name)
+                .append("\n");
+
+        return header;
     }
 
     @NotNull
-    String appendFooter(double totalAmount, int frequentRenterPoints, String result) {
-        result += "Amount owed is " + totalAmount + "\n";
-        result += "You earned " + frequentRenterPoints + " frequent renter points";
-        return result;
+    StringBuilder appendFooter(double totalAmount, int frequentRenterPoints) {
+        StringBuilder footer = new StringBuilder();
+        footer.append("Amount owed is ").append(totalAmount).append("\n");
+        footer.append("You earned ").append(frequentRenterPoints).append(" frequent renter points");
+        return footer;
     }
 
-    private double getThisAmount(Rental rental) {
+    double getTotalAmount() {
+        double accumulate = 0;
+        for (Rental rental : rentals) {
+            accumulate += getCost(rental);
+        }
+        return accumulate;
+    }
+
+    int getFrequentRenterPoints(){
+        int accumulate = 0;
+        for (Rental rental : rentals) {
+            accumulate++;
+            if ((rental.getMovie().priceCode == Movie.PriceCode.NEW_RELEASE) && rental.getDaysRented() > 1) {
+                accumulate++;
+            }
+        }
+        return accumulate;
+    }
+
+    private double getCost(Rental rental) {
         switch (rental.getMovie().priceCode) {
             case REGULAR: {
                 return new RegularStrategy().getCost(rental);
