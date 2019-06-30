@@ -6,12 +6,15 @@ package com.oldgoat5;
  *********************************************************************/
 public class RegularStrategy implements CostStrategy {
 
+    private static final double COST_MULTIPLIER = 1.5;
+    private static final double BASE_COST = 2;
+
     @Override
     public double getCost(Rental rental) {
-        double localThisAmount = 2;
         if (rental.daysRented > 2) {
-            localThisAmount += (rental.daysRented - 2) * 1.5;
+            return BASE_COST + (rental.daysRented - 2) * COST_MULTIPLIER;
+        } else {
+            return BASE_COST;
         }
-        return localThisAmount;
     }
 }

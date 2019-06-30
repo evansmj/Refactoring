@@ -16,12 +16,15 @@ public class Customer {
         this.name = name;
     }
 
-    public void addRental(Rental arg) {
-        rentals.add(arg);
+    public void addRental(Rental rental) {
+        rentals.add(rental);
     }
 
     public String statement() {
-        return createHeader().append(appendLineItems()).append(appendFooter(getTotalAmount(), getFrequentRenterPoints())).toString();
+        return createHeader()
+                .append(appendLineItems())
+                .append(appendFooter(getTotalAmount(), getFrequentRenterPoints()))
+                .toString();
     }
 
     StringBuilder appendLineItems(){
